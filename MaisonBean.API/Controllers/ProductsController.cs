@@ -42,13 +42,18 @@ public class ProductsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, new { id });
     }
 
-    // PUT /api/products/{id}
+    // PUT /api/products/{id}/update/ad
+
     [Authorize(Roles = "ADMIN")]
-    [HttpPut("{id:int}update/ad")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateProductCommand cmd)
+    [HttpPut("{id:int}/update/ad")]
+    public async Task<IActionResult> Update(
+        int id,
+        [FromBody] UpdateProductCommand cmd)
     {
         cmd.Id = id;
+
         await _mediator.Send(cmd);
+
         return NoContent();
     }
 

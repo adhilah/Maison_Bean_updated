@@ -191,28 +191,29 @@ builder.Services.AddAuthorization();
 
 builder.Services.Configure<
     CookiePolicyOptions>(options =>
-{
-    options.HttpOnly =
-        HttpOnlyPolicy.Always;
+    {
+        options.HttpOnly =
+            HttpOnlyPolicy.Always;
 
-options.MinimumSameSitePolicy =
-    SameSiteMode.None;
+        options.MinimumSameSitePolicy =
+            SameSiteMode.None;
 
-options.Secure =
-    CookieSecurePolicy.Always;
-});
+        options.Secure =
+            CookieSecurePolicy.Always;
+    });
 
 
 // ======================================================
 // CORS
 // ======================================================
 
-builder.Services.AddCors(options => 
-{ options.AddPolicy(
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
     "AllowFrontend",
-    policy => { 
+    policy => {
         policy
-        .WithOrigins("http://localhost:5173", 
+        .WithOrigins("http://localhost:5173",
         "https://localhost:5173")
         .AllowAnyHeader()
         .AllowAnyMethod()
