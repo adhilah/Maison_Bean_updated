@@ -1,0 +1,35 @@
+## Build folders
+bin/
+obj/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider / VS Code
+.idea/
+.vscode/
+
+## Logs
+*.log
+
+## Environment files
+.env
+
+## App settings
+appsettings.Development.json
+appsettings.Local.json
+
+## NuGet
+packages/
+*.nupkg
+
+## Node
+node_modules/
+
+## OS files
+.DS_Store
+Thumbs.db	
