@@ -28,6 +28,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
             Price = product.Price,
             StockQuantity = product.StockQuantity,
             IsActive = product.IsActive,
+            IsBlocked = product.IsBlocked,
             Category = product.Category,
             Image = product.Image,
             BaseCalories = product.BaseCalories,

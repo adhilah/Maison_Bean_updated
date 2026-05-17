@@ -118,10 +118,12 @@
 
 
 
+using MaisonBean.API.Attributes;
 using MaisonBean.Application.MilkOptions.Commands;
 using MaisonBean.Application.MilkOptions.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MaisonBean.API.Controllers;
@@ -160,6 +162,8 @@ public class MilkOptionsController : ControllerBase
     // GET ALL MILKS FOR ADMIN
     //======================================
 
+
+    [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpGet("all/ad")]
     public async Task<IActionResult> GetAllMilkOptions(
@@ -194,6 +198,8 @@ public class MilkOptionsController : ControllerBase
     // CREATE
     // ======================================
 
+
+    [AdminIpWhitelist]
     [HttpPost("milk/ad")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Create(
@@ -222,6 +228,8 @@ public class MilkOptionsController : ControllerBase
     // UPDATE
     // ======================================
 
+
+    [AdminIpWhitelist]
     [HttpPut("{id}/ad")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Update(
@@ -250,6 +258,8 @@ public class MilkOptionsController : ControllerBase
     // BLOCK / UNBLOCK
     // ======================================
 
+
+    [AdminIpWhitelist]
     [HttpPatch("{id}/block/ad")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> ToggleBlock(
@@ -276,6 +286,8 @@ public class MilkOptionsController : ControllerBase
     // DELETE
     // ======================================
 
+
+    [AdminIpWhitelist]
     [HttpDelete("{id}/ad")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Delete(

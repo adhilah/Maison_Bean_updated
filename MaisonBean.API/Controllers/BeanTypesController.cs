@@ -1,6 +1,8 @@
-﻿using MaisonBean.Application.BeanTypes.Commands;
+﻿using MaisonBean.API.Attributes;
+using MaisonBean.Application.BeanTypes.Commands;
 using MaisonBean.Application.BeanTypes.Queries;
 using MediatR;
+//using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +37,8 @@ public class BeanTypesController : ControllerBase
     // GET ALL BEANS FOR ADMIN
     //======================================
 
+
+    [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpGet("all/ad")]
     public async Task<IActionResult> GetAllBeans(
@@ -51,6 +55,8 @@ public class BeanTypesController : ControllerBase
     // CREATE BEAN
     // ======================================
 
+
+    [AdminIpWhitelist]
     [HttpPost("bean/ad")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Create(
@@ -72,6 +78,8 @@ public class BeanTypesController : ControllerBase
     // UPDATE BEAN
     // ======================================
 
+
+    [AdminIpWhitelist]
     [HttpPut("{id}/update/ad")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Update(
@@ -94,6 +102,8 @@ public class BeanTypesController : ControllerBase
     // BLOCK / UNBLOCK BEAN
     // ======================================
 
+
+    [AdminIpWhitelist]
     [HttpPatch("{id}/block/ad")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Toggle(
@@ -116,6 +126,8 @@ public class BeanTypesController : ControllerBase
     // DELETE BEAN
     // ======================================
 
+
+    [AdminIpWhitelist]
     [HttpDelete("{id}/ad")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Delete(

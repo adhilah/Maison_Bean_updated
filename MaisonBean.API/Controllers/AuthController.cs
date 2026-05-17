@@ -1,6 +1,6 @@
 ﻿using MaisonBean.Application.Auth.Commands;
 using MaisonBean.Application.Interfaces;
-
+using Microsoft.AspNetCore.RateLimiting;
 using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +37,7 @@ public class AuthController : ControllerBase
     // =====================================================
 
     [HttpPost("register")]
+    [EnableRateLimiting("login")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterCommand cmd)
     {
@@ -88,6 +89,7 @@ public class AuthController : ControllerBase
     // =====================================================
 
     [HttpPost("login")]
+    [EnableRateLimiting("login")]
     public async Task<IActionResult> Login(
         [FromBody] LoginCommand cmd)
     {
@@ -134,7 +136,7 @@ public class AuthController : ControllerBase
             result.Token!,
             CreateAuthCookieOptions(
                 DateTime.UtcNow
-                    .AddMinutes(15)
+                    .AddMinutes(3)
             ));
 
         // =================================================
@@ -165,6 +167,7 @@ public class AuthController : ControllerBase
     // =====================================================
 
     [HttpPost("refresh")]
+    [EnableRateLimiting("login")]
     public async Task<IActionResult> Refresh()
     {
         var refreshToken =

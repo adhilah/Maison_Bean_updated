@@ -1,4 +1,5 @@
-﻿using MaisonBean.Application.Interfaces;
+﻿using MaisonBean.API.Attributes;
+using MaisonBean.Application.Interfaces;
 using MaisonBean.Application.Orders.Commands;
 using MaisonBean.Application.Orders.DTOs;
 using MaisonBean.Application.Orders.Requests;
@@ -6,10 +7,12 @@ using MaisonBean.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableRateLimiting("checkout")]
 [Authorize]
 public class OrderController : ControllerBase
 {
@@ -182,6 +185,8 @@ public class OrderController : ControllerBase
     }
 
     //get all users's orders
+
+    [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpGet("all/ad")]
     public async Task<IActionResult> GetAllOrders(CancellationToken ct)
@@ -194,6 +199,8 @@ public class OrderController : ControllerBase
     }
 
     //update delivery status
+
+    [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpPatch("{id}/status/ad")]
     public async Task<IActionResult> UpdateStatus(

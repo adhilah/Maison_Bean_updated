@@ -1,8 +1,10 @@
-﻿using MaisonBean.Application.Interfaces;
+﻿using MaisonBean.API.Attributes;
+using MaisonBean.Application.Interfaces;
 using MaisonBean.Application.User.Commands;
 using MaisonBean.Application.User.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
@@ -73,6 +75,8 @@ public class UserController : ControllerBase
 
     //Get all user
     [Authorize(Roles = "ADMIN")]
+
+    [AdminIpWhitelist]
     [HttpGet("customers/ad")]
     public async Task<IActionResult> GetAllUsers(CancellationToken ct)
     {
@@ -87,6 +91,8 @@ public class UserController : ControllerBase
 
     //toggle- block user
     [Authorize(Roles = "ADMIN")]
+
+    [AdminIpWhitelist]
     [HttpPatch("{id}/block/ad")]
     public async Task<IActionResult> ToggleUser(int id)
     {

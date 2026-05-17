@@ -1,6 +1,7 @@
 ﻿using MaisonBean.Application.AI.Commands;
 using MaisonBean.Application.AI.Queries;
 using MediatR;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ namespace MaisonBean.API.Controllers;
 
 [ApiController]
 [Authorize(Roles = "CUSTOMER")]
+[EnableRateLimiting("ai")]
 [Route("api/chat")]
 public class ChatController : ControllerBase
 {

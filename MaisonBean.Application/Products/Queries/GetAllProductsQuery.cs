@@ -19,7 +19,7 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, I
         var products = await _repo.GetAllAsync();
 
         return products
-            .Where(p => !p.IsBlocked)
+            .Where(p => p.IsActive && !p.IsBlocked)
             .Select(p => new ProductDto
             {
                 Id = p.Id,
@@ -28,6 +28,7 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, I
                 Price = p.Price,
                 StockQuantity = p.StockQuantity,
                 IsActive = p.IsActive,
+                IsBlocked = p.IsBlocked,
                 Category = p.Category,
                 Image = p.Image,
                 BaseCalories = p.BaseCalories,

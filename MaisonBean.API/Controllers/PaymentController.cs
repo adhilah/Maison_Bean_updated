@@ -1,11 +1,14 @@
 ﻿using MaisonBean.Application.Payments.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/payment")]
 [Authorize(Roles = "CUSTOMER")]
+[EnableRateLimiting("checkout")]
+
 public class PaymentController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -2,12 +2,14 @@
 using MaisonBean.Application.Cart;
 using MaisonBean.Application.Cart.Queries;
 using MediatR;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 [ApiController]
 [Authorize(Roles = "CUSTOMER")]
+[EnableRateLimiting("cart")]
 [Route("api/cart")]
 [Authorize]
 public class CartController : ControllerBase

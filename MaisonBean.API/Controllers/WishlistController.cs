@@ -4,10 +4,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 [ApiController]
 [Authorize(Roles = "CUSTOMER")]
+[EnableRateLimiting("wishlist")]
 [Route("api/[controller]")]
 public class WishlistController : ControllerBase
 {

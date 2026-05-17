@@ -41,6 +41,7 @@ public class GetAllProductsForAdminQueryHandler
             Price = p.Price,
             StockQuantity = p.StockQuantity,
             IsActive = p.IsActive,
+            IsBlocked = p.IsBlocked,
             Category = p.Category,
             Image = p.Image,
             BaseCalories = p.BaseCalories,

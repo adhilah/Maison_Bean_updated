@@ -1,4 +1,40 @@
-﻿using MaisonBean.Application.Interfaces;
+﻿//using MaisonBean.Application.Interfaces;
+//using MediatR;
+
+//namespace MaisonBean.Application.Products.Commands;
+
+//public class DeleteProductCommand : IRequest<bool>
+//{
+//    public int Id { get; set; }
+//}
+
+//public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, bool>
+//{
+//    private readonly IProductRepository _productRepo;
+//    private readonly IUnitOfWork _uow;
+
+//    public DeleteProductCommandHandler(IProductRepository productRepo, IUnitOfWork uow)
+//    {
+//        _productRepo = productRepo;
+//        _uow = uow;
+//    }
+
+//    public async Task<bool> Handle(DeleteProductCommand request, CancellationToken ct)
+//    {
+//        var product = await _productRepo.GetByIdAsync(request.Id);
+//        if (product == null) return false;
+
+//        product.Deactivate();
+//        _productRepo.Update(product);
+//        await _uow.SaveChangesAsync(ct);
+//        return true;
+//    }
+//}
+
+
+
+
+using MaisonBean.Application.Interfaces;
 using MediatR;
 
 namespace MaisonBean.Application.Products.Commands;
@@ -8,25 +44,38 @@ public class DeleteProductCommand : IRequest<bool>
     public int Id { get; set; }
 }
 
-public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, bool>
+public class DeleteProductCommandHandler
+    : IRequestHandler<DeleteProductCommand, bool>
 {
     private readonly IProductRepository _productRepo;
     private readonly IUnitOfWork _uow;
 
-    public DeleteProductCommandHandler(IProductRepository productRepo, IUnitOfWork uow)
+    public DeleteProductCommandHandler(
+        IProductRepository productRepo,
+        IUnitOfWork uow)
     {
         _productRepo = productRepo;
         _uow = uow;
     }
 
-    public async Task<bool> Handle(DeleteProductCommand request, CancellationToken ct)
+    public async Task<bool> Handle(
+        DeleteProductCommand request,
+        CancellationToken ct)
     {
-        var product = await _productRepo.GetByIdAsync(request.Id);
-        if (product == null) return false;
+        var product =
+            await _productRepo.GetByIdAsync(request.Id, ct);
 
-        product.Deactivate();
-        _productRepo.Update(product);
+        if (product == null)
+            return false;
+
+        // REAL DELETE
+
+        _productRepo.Delete(product);
+
+        // SAVE
+
         await _uow.SaveChangesAsync(ct);
+
         return true;
     }
 }

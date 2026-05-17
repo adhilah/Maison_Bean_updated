@@ -1,3 +1,4 @@
+using MaisonBean.API.Middleware;
 using MaisonBean.Application.AI.Interfaces;
 using MaisonBean.Application.Common;
 using MaisonBean.Application.Interfaces;
@@ -19,12 +20,14 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder =
     WebApplication.CreateBuilder(args);
@@ -168,6 +171,156 @@ builder.Services
 // ======================================================
 
 builder.Services.AddAuthorization();
+
+
+// ======================================================
+// RATE LIMITING
+// ======================================================
+
+builder.Services.AddRateLimiter(options =>
+{
+    // =========================================
+    // GLOBAL LIMITER
+    // =========================================
+
+    options.GlobalLimiter =
+        PartitionedRateLimiter.Create<HttpContext, string>(
+            context =>
+            {
+                var ip =
+                    context.Connection
+                        .RemoteIpAddress?
+                        .ToString()
+
+                    ?? "unknown";
+
+                return RateLimitPartition
+                    .GetFixedWindowLimiter(
+                        partitionKey: ip,
+
+                        factory: _ =>
+                            new FixedWindowRateLimiterOptions
+                            {
+                                PermitLimit = 100,
+
+                                Window =
+                                    TimeSpan.FromMinutes(1),
+
+                                QueueProcessingOrder =
+                                    QueueProcessingOrder
+                                        .OldestFirst,
+
+                                QueueLimit = 2
+                            });
+            });
+
+    // =========================================
+    // LOGIN POLICY
+    // =========================================
+
+    options.AddFixedWindowLimiter(
+        "login",
+        limiterOptions =>
+        {
+            limiterOptions.PermitLimit = 5;
+
+            limiterOptions.Window =
+                TimeSpan.FromMinutes(1);
+
+            limiterOptions.QueueLimit = 0;
+        });
+
+    // =========================================
+    // CART POLICY
+    // =========================================
+
+    options.AddFixedWindowLimiter(
+        "cart",
+        limiterOptions =>
+        {
+            limiterOptions.PermitLimit = 30;
+
+            limiterOptions.Window =
+                TimeSpan.FromMinutes(1);
+
+            limiterOptions.QueueLimit = 0;
+        });
+
+    // =========================================
+    // WISHLIST POLICY
+    // =========================================
+
+    options.AddFixedWindowLimiter(
+        "wishlist",
+        limiterOptions =>
+        {
+            limiterOptions.PermitLimit = 20;
+
+            limiterOptions.Window =
+                TimeSpan.FromMinutes(1);
+
+            limiterOptions.QueueLimit = 0;
+        });
+
+    // =========================================
+    // CHECKOUT POLICY
+    // =========================================
+
+    options.AddFixedWindowLimiter(
+        "checkout",
+        limiterOptions =>
+        {
+            limiterOptions.PermitLimit = 10;
+
+            limiterOptions.Window =
+                TimeSpan.FromMinutes(1);
+
+            limiterOptions.QueueLimit = 0;
+        });
+
+    // =========================================
+    // AI POLICY
+    // =========================================
+
+    options.AddFixedWindowLimiter(
+        "ai",
+        limiterOptions =>
+        {
+            limiterOptions.PermitLimit = 15;
+
+            limiterOptions.Window =
+                TimeSpan.FromMinutes(1);
+
+            limiterOptions.QueueLimit = 0;
+        });
+
+    // =========================================
+    // RESPONSE
+    // =========================================
+
+    options.OnRejected = async (
+        context,
+        token) =>
+    {
+        context.HttpContext.Response.StatusCode =
+            StatusCodes.Status429TooManyRequests;
+
+        context.HttpContext.Response.ContentType =
+            "application/json";
+
+        await context.HttpContext.Response
+            .WriteAsJsonAsync(
+                new
+                {
+                    success = false,
+                    message =
+                        "Too many requests. Please try again later."
+                },
+                cancellationToken: token
+            );
+    };
+
+}); 
 
 // ======================================================
 // COOKIE POLICY
@@ -416,6 +569,8 @@ using (var scope =
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<IpWhitelistMiddleware>();
+
 app.UseSwagger();
 
 app.UseSwaggerUI(c =>
@@ -433,6 +588,8 @@ app.UseCors("AllowFrontend");
 app.UseCookiePolicy();
 
 app.UseAuthentication();
+
+app.UseRateLimiter();
 
 app.UseAuthorization();
 

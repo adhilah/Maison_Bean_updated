@@ -23,7 +23,10 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetByCategoryAsync(string category, CancellationToken ct = default)
     {
         return await _context.Products
-            .Where(p => p.Category == category && p.IsActive)
+            .Where(p =>
+    p.Category == category &&
+    p.IsActive &&
+    !p.IsBlocked)
             .ToListAsync(ct);
     }
 

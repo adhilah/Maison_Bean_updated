@@ -1,12 +1,14 @@
-﻿using MaisonBean.Application.Products.Commands;
+﻿using MaisonBean.API.Attributes;
+using MaisonBean.Application.Products.Commands;
 using MaisonBean.Application.Products.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MaisonBean.API.Controllers;
 
-
+[AdminIpWhitelist]
 [ApiController]
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
@@ -34,6 +36,8 @@ public class ProductsController : ControllerBase
 
 
     // POST /api/products
+
+    [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpPost("product/ad")]
     public async Task<IActionResult> Create([FromBody] CreateProductCommand cmd)
@@ -58,6 +62,8 @@ public class ProductsController : ControllerBase
     }
 
     //toggle
+
+    [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpPatch("{id:int}/block/ad")]
     public async Task<IActionResult> Toggle(int id)
@@ -73,6 +79,8 @@ public class ProductsController : ControllerBase
     }
 
     // DELETE 
+
+    [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpDelete("{id:int}/ad")]
     public async Task<IActionResult> Delete(int id)
@@ -111,6 +119,8 @@ public class ProductsController : ControllerBase
     }
 
     // GET /api/products/admin/all
+
+    [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpGet("admin/all")]
     public async Task<IActionResult> GetAllForAdmin(
