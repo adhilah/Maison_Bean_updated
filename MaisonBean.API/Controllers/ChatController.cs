@@ -1,16 +1,17 @@
 ﻿using MaisonBean.Application.AI.Commands;
 using MaisonBean.Application.AI.Queries;
 using MediatR;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
+using System.Text;
 
 namespace MaisonBean.API.Controllers;
 
 [ApiController]
 [Authorize(Roles = "CUSTOMER")]
-[EnableRateLimiting("ai")]
+//[EnableRateLimiting("ai")]
 [Route("api/chat")]
 public class ChatController : ControllerBase
 {
@@ -26,17 +27,39 @@ public class ChatController : ControllerBase
     // POST: api/chat
     // =========================================
 
+    //[HttpPost]
+    //public async Task<IActionResult> AskAI(
+    //    AskAICommand command)
+    //{
+    //    command.UserId = GetUserId();
+
+    //    var response = await _mediator.Send(command);
+
+    //    return Ok(response);
+    //}
+
+
     [HttpPost]
     public async Task<IActionResult> AskAI(
-        AskAICommand command)
+    [FromBody] AskAICommand command)
     {
-        command.UserId = GetUserId();
+        try
+        {
+            var result =
+                await _mediator.Send(command);
 
-        var response = await _mediator.Send(command);
-
-        return Ok(response);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = ex.Message,
+                inner = ex.InnerException?.Message,
+                stack = ex.StackTrace
+            });
+        }
     }
-
     // =========================================
     // AI RECOMMENDATIONS
     // POST: api/chat/recommendations

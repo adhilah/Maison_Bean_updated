@@ -56,37 +56,65 @@ public class OllamaChatService
         // BUILD PRODUCT CONTEXT
         // =====================================
 
-        var productContext =
-            string.Join(
-                "\n",
+        //var productContext =
+        //    string.Join(
+        //        "\n",
 
-                products.Select(p =>
-                    $"{p.Name} - {p.Description} - ₹{p.Price}")
-            );
+        //        products.Select(p =>
+        //            $"{p.Name} - {p.Description} - ₹{p.Price}")
+        //    );
+
+        var productContext =
+    string.Join(
+        "\n\n",
+
+        products.Select(p =>
+            $"""
+PRODUCT:
+Name: {p.Name}
+Description: {p.Description}
+Price: ₹{p.Price}
+""")
+    );
 
         // =====================================
         // AI PROMPT
         // =====================================
 
         var prompt = $@"
-You are an experienced waiter at Maison Bean,
-a premium luxury café.
+You are Maison Bean AI,
+a premium coffee assistant.
 
-You help customers choose products naturally.
+STRICT RULES:
 
-Available products:
+- Answer ONLY using products provided below
+- Never invent coffee beans
+- Never invent product names
+- Never invent origins
+- Never hallucinate menu items
+- If unavailable, say:
+  'Currently unavailable in our menu.'
+
+AVAILABLE PRODUCTS:
 {productContext}
 
-Rules:
-- Reply in only 2 or 3 short lines
-- Keep replies concise
-- Recommend products naturally
-- Do not use emojis
-- Do not use symbols like checkmarks or ticks
-- Speak like a real luxury coffee shop waiter
-
-Customer request:
+CUSTOMER QUESTION:
 {message}
+
+RESPONSE RULES:
+
+- Maximum 4 short lines
+- Mobile friendly
+- No markdown
+- No long paragraphs
+
+FORMAT:
+
+Recommendation:
+Short answer
+
+Reason:
+Short reason
 ";
 
         // =====================================
@@ -95,19 +123,18 @@ Customer request:
 
         var requestBody = new
         {
-            model = "tinyllama",
+            model = "phi3:latest",
 
-            prompt = prompt,
+            messages = new[]
+     {
+        new
+        {
+            role = "user",
+            content = prompt
+        }
+    },
 
-            stream = false,
-
-            options = new
-            {
-                num_predict = 40,
-                temperature = 0.4,
-                top_k = 20,
-                top_p = 0.8
-            }
+            stream = false
         };
 
         var json =
@@ -116,7 +143,7 @@ Customer request:
 
         var response =
             await _httpClient.PostAsync(
-                "http://localhost:11434/api/generate",
+                "http://localhost:11434/api/chat",
 
                 new StringContent(
                     json,
@@ -125,7 +152,15 @@ Customer request:
 
                 ct);
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            var error =
+                await response.Content
+                    .ReadAsStringAsync(ct);
+
+            throw new Exception(
+                $"Ollama Error: {error}");
+        }
 
         // =====================================
         // READ RESPONSE
@@ -138,10 +173,31 @@ Customer request:
         using var document =
             JsonDocument.Parse(responseJson);
 
+        //var aiResponse =
+        //    document.RootElement
+        //        .GetProperty("response")
+        //        .GetString();
         var aiResponse =
-            document.RootElement
-                .GetProperty("response")
-                .GetString();
+    document.RootElement
+        .GetProperty("message")
+        .GetProperty("content")
+        .GetString();
+        var validProducts =
+    products.Select(x =>
+        x.Name.ToLower())
+    .ToList();
+
+        var containsValidProduct =
+            validProducts.Any(product =>
+                aiResponse!
+                    .ToLower()
+                    .Contains(product));
+
+        if (!containsValidProduct)
+        {
+            aiResponse =
+                "Currently unavailable in our menu.";
+        }
 
         // =====================================
         // RETURN DTO
