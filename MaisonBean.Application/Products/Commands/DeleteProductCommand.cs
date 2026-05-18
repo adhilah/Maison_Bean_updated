@@ -68,11 +68,7 @@ public class DeleteProductCommandHandler
         if (product == null)
             return false;
 
-        // REAL DELETE
-
         _productRepo.Delete(product);
-
-        // SAVE
 
         await _uow.SaveChangesAsync(ct);
 

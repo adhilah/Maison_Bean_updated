@@ -589,6 +589,8 @@ app.UseCookiePolicy();
 
 app.UseAuthentication();
 
+app.UseMiddleware<BlockedUserMiddleware>();
+
 app.UseRateLimiter();
 
 app.UseAuthorization();
