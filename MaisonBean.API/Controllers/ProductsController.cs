@@ -1,136 +1,84 @@
-﻿using MaisonBean.API.Attributes;
-using MaisonBean.Application.Products.Commands;
+﻿using MaisonBean.Application.Products.Commands;
 using MaisonBean.Application.Products.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MaisonBean.API.Controllers;
-
-[AdminIpWhitelist]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/products")]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public ProductsController(IMediator mediator) => _mediator = mediator;
-
-    //search
-    [HttpGet("search")]
-    public async Task<IActionResult> Search(
-    [FromQuery] string term,
-    CancellationToken ct)
+    public ProductsController(
+        IMediator mediator)
     {
-        if (string.IsNullOrWhiteSpace(term))
-            return BadRequest(
-                "Search term is required");
-
-        var result = await _mediator.Send(
-            new SearchProductsQuery(term),
-            ct);
-
-        return Ok(result);
+        _mediator = mediator;
     }
 
-
-    // POST /api/products
-
-    [AdminIpWhitelist]
-    [Authorize(Roles = "ADMIN")]
-    [HttpPost("product/ad")]
-    public async Task<IActionResult> Create([FromBody] CreateProductCommand cmd)
-    {
-        var id = await _mediator.Send(cmd);
-        return CreatedAtAction(nameof(GetById), new { id }, new { id });
-    }
-
-    // PUT /api/products/{id}/update/ad
-
-    [Authorize(Roles = "ADMIN")]
-    [HttpPut("{id:int}/update/ad")]
-    public async Task<IActionResult> Update(
-        int id,
-        [FromBody] UpdateProductCommand cmd)
-    {
-        cmd.Id = id;
-
-        await _mediator.Send(cmd);
-
-        return NoContent();
-    }
-
-    //toggle
-
-    [AdminIpWhitelist]
-    [Authorize(Roles = "ADMIN")]
-    [HttpPatch("{id:int}/block/ad")]
-    public async Task<IActionResult> Toggle(int id)
-    {
-        var isBlocked = await _mediator.Send(new ToggleProductCommand(id));
-
-        return Ok(new
-        {
-            message = isBlocked
-                ? "Product successfully blocked"
-                : "Product successfully unblocked"
-        });
-    }
-
-    // DELETE 
-
-    [AdminIpWhitelist]
-    [Authorize(Roles = "ADMIN")]
-    [HttpDelete("{id:int}/ad")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var result = await _mediator.Send(new DeleteProductCommand { Id = id });
-        if (!result) return NotFound($"Product {id} not found");
-        return NoContent();
-    }
-
-    // GET
-    [HttpGet("{id:int}")] 
-    public async Task<IActionResult> GetById(int id, CancellationToken ct)
-    {
-        var result = await _mediator.Send(new GetProductByIdQuery(id), ct);
-        if (result is null)
-            return NotFound($"Product {id} not found");
-        return Ok(result);
-    }
-
-    // GET - category
-    [HttpGet("category/{category}")]
-    public async Task<IActionResult> GetByCategory(string category)
-    {
-        var result = await _mediator.Send(new GetProductsByCategoryQuery(category));
-        if (!result.Any()) return NotFound($"No products found in category '{category}'.");
-        return Ok(result);
-    }
-
-    // GET /api/products
-    [HttpGet] 
-    public async Task<IActionResult> GetAll(CancellationToken ct)
-    {
-        var result = await _mediator.Send(new GetAllProductsQuery(), ct);
-        if (!result.Any()) return NotFound("No products found.");
-        return Ok(result);
-    }
-
-    // GET /api/products/admin/all
-
-    [AdminIpWhitelist]
-    [Authorize(Roles = "ADMIN")]
-    [HttpGet("admin/all")]
-    public async Task<IActionResult> GetAllForAdmin(
+    [HttpGet]
+    public async Task<IActionResult> GetAll(
         CancellationToken ct)
     {
-        var result = await _mediator.Send(
-            new GetAllProductsForAdminQuery(),
-            ct
+        return Ok(
+            await _mediator.Send(
+                new GetAllProductsQuery(),
+                ct
+            )
         );
+    }
 
-        return Ok(result);
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(
+        int id,
+        CancellationToken ct)
+    {
+        var result =
+            await _mediator.Send(
+                new GetProductByIdQuery(id),
+                ct
+            );
+
+        return result == null
+            ? NotFound()
+            : Ok(result);
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpPost]
+    public async Task<IActionResult> Create(
+        CreateProductCommand command)
+    {
+        var id =
+            await _mediator.Send(command);
+
+        return Ok(id);
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(
+        int id,
+        UpdateProductCommand command)
+    {
+        command.Id = id;
+
+        await _mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(
+        int id)
+    {
+        await _mediator.Send(
+            new DeleteProductCommand
+            {
+                Id = id
+            });
+
+        return NoContent();
     }
 }

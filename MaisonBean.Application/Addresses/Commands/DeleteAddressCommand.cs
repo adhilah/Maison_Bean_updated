@@ -1,48 +1,65 @@
 ﻿using MaisonBean.Application.Interfaces;
 using MediatR;
 
+namespace MaisonBean.Application.Addresses.Commands;
 
-namespace MaisonBean.Application.Addresses.Commands
+public record DeleteAddressCommand(int Id)
+    : IRequest<bool>; 
+
+
+
+//handler
+public class DeleteAddressHandler
+    : IRequestHandler<
+        DeleteAddressCommand,
+        bool>
 {
-    public class DeleteAddressCommand : IRequest<Unit>
-    {
-        public int Id { get; set; }
+    private readonly IAddressRepository _repo;
 
-        public string UserId { get; set; } = string.Empty;
+    private readonly IUnitOfWork _uow;
+
+    private readonly ICurrentUserService
+        _currentUser;
+
+    public DeleteAddressHandler(
+        IAddressRepository repo,
+        IUnitOfWork uow,
+        ICurrentUserService currentUser)
+    {
+        _repo = repo;
+
+        _uow = uow;
+
+        _currentUser = currentUser;
     }
 
-
-    public class DeleteAddressHandler
-     : IRequestHandler<DeleteAddressCommand, Unit>
+    public async Task<bool> Handle(
+        DeleteAddressCommand request,
+        CancellationToken ct)
     {
-        private readonly IAddressRepository _repo;
-        private readonly IUnitOfWork _uow;
+        var userId =
+            _currentUser.UserId;
 
-        public DeleteAddressHandler(
-            IAddressRepository repo,
-            IUnitOfWork uow)
-        {
-            _repo = repo;
-            _uow = uow;
-        }
+        if (string.IsNullOrEmpty(userId))
+            return false;
 
-        public async Task<Unit> Handle(
-            DeleteAddressCommand request,
-            CancellationToken ct)
-        {
-            var address = await _repo.GetByIdAsync(request.Id, ct);
+        var address =
+            await _repo.GetByIdAsync(
+                request.Id,
+                ct);
 
-            if (address == null)
-                throw new Exception("Address not found");
+        if (address == null)
+            return false;
 
-            if (address.UserId != request.UserId)
-                throw new UnauthorizedAccessException();
+        if (address.UserId != userId)
+            return false;
 
-            _repo.Delete(address);
+        address.SoftDelete();
 
-            await _uow.SaveChangesAsync(ct);
+        _repo.Update(address);
 
-            return Unit.Value;
-        }
+        await _uow.SaveChangesAsync(ct);
+
+        return true;
     }
 }

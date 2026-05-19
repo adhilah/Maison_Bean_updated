@@ -179,7 +179,7 @@ public class AppDbContext
                   .WithMany(u => u.WishlistItems)
                   .HasForeignKey(w => w.UserId);
 
-            // UNIQUE INDEX
+            // UNIQUE INDEX.HasQueryFilter(p => !p.IsBlocked)
             entity.HasIndex(
                 w => new
                 {

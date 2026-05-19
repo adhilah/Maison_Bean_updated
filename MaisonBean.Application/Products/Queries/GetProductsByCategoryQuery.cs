@@ -1,6 +1,7 @@
 ﻿using MaisonBean.Application.Interfaces;
 using MediatR;
 
+
 namespace MaisonBean.Application.Products.Queries;
 
 public record GetProductsByCategoryQuery(string Category) : IRequest<IEnumerable<ProductDto>>;

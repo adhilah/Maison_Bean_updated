@@ -15,7 +15,7 @@ public class AddressRepository : IAddressRepository
     public async Task<List<Address>> GetByUserIdAsync(string userId, CancellationToken ct)
     {
         return await _context.Addresses
-            .Where(a => a.UserId == userId)
+            .Where(a => a.UserId == userId && !a.IsDeleted)
             .ToListAsync(ct);
     }
 

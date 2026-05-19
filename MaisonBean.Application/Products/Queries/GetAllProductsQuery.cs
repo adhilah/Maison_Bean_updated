@@ -3,36 +3,30 @@ using MediatR;
 
 namespace MaisonBean.Application.Products.Queries;
 
-public record GetAllProductsQuery : IRequest<IEnumerable<ProductDto>>;
+public record GetAllProductsQuery
+    : IRequest<IEnumerable<ProductDto>>;
 
-public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>
+public class GetAllProductsQueryHandler
+    : IRequestHandler<
+        GetAllProductsQuery,
+        IEnumerable<ProductDto>>
 {
     private readonly IProductRepository _repo;
 
-    public GetAllProductsQueryHandler(IProductRepository repo)
+    public GetAllProductsQueryHandler(
+        IProductRepository repo)
     {
         _repo = repo;
     }
 
-    public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken ct)
+    public async Task<IEnumerable<ProductDto>> Handle(
+        GetAllProductsQuery request,
+        CancellationToken ct)
     {
-        var products = await _repo.GetAllAsync();
+        var products =
+            await _repo.GetAllAsync();
 
         return products
-            .Where(p => p.IsActive && !p.IsBlocked)
-            .Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Price = p.Price,
-                StockQuantity = p.StockQuantity,
-                IsActive = p.IsActive,
-                IsBlocked = p.IsBlocked,
-                Category = p.Category,
-                Image = p.Image,
-                BaseCalories = p.BaseCalories,
-                HealthBenefits = p.HealthBenefits
-            });
+            .Select(p => p.ToDto());
     }
 }

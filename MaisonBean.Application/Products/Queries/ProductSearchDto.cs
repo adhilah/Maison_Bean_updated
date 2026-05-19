@@ -1,4 +1,5 @@
-﻿namespace MaisonBean.Application.Products.Queries;
+﻿
+namespace MaisonBean.Application.Products.Queries;
 
 public class ProductSearchDto
 {

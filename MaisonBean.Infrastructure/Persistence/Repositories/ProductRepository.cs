@@ -10,8 +10,15 @@ public class ProductRepository : IProductRepository
 
     public ProductRepository(AppDbContext context) => _context = context;
 
-    public async Task<IEnumerable<Product>> GetAllAsync() =>
-        await _context.Products.Where(p => p.IsActive).ToListAsync();
+    public async Task<IEnumerable<Product>> GetAllAsync()
+    {
+        return await _context.Products
+            .AsNoTracking()
+            .Where(p =>
+                p.IsActive &&
+                !p.IsBlocked)
+            .ToListAsync();
+    }
 
     public async Task<Product?> GetByIdAsync(int id, CancellationToken ct = default)
     {

@@ -27,6 +27,9 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using MaisonBean.Application.Interfaces;
+using MaisonBean.Infrastructure.Configurations;
+using MaisonBean.Infrastructure.Services;
 using System.Threading.RateLimiting;
 
 var builder =
@@ -61,6 +64,20 @@ builder.Services.Configure<OpenAIOptions>(
 );
 
 builder.Services.AddHttpClient();
+
+// ======================================================
+// CLOUDINARY
+// ======================================================
+
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection(
+        "CloudinarySettings"
+    )
+);
+
+builder.Services.AddScoped<
+    IImageService,
+    CloudinaryService>();
 
 // ======================================================
 // JWT SETTINGS
@@ -460,6 +477,14 @@ builder.Services.AddScoped<
 builder.Services.AddScoped<
     IPromptService,
     PromptBuilderService>();
+
+//==========================
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<
+    ICurrentUserService,
+    CurrentUserService>();
 
 // ======================================================
 // PAYMENT

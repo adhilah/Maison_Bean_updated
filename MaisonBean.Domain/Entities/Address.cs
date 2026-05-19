@@ -8,6 +8,15 @@ public class Address : BaseEntity
     public string DeliveryAddress { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
+    public bool IsDeleted { get; private set; }
 
     public bool IsDefault { get; set; } = false;
+
+
+
+    public void SoftDelete()
+    {
+        IsDeleted = true;
+    }
+
 }

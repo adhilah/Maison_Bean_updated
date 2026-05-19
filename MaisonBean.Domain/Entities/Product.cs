@@ -5,29 +5,39 @@ namespace MaisonBean.Domain.Entities;
 public class Product : BaseEntity
 {
     public string Name { get; private set; } = string.Empty;
+
     public string Description { get; private set; } = string.Empty;
+
     public decimal Price { get; private set; }
+
     public int StockQuantity { get; private set; }
+
     public bool IsActive { get; private set; } = true;
+
     public string Category { get; private set; } = string.Empty;
+
     public string Image { get; private set; } = string.Empty;
+
+    //public string ImagePublicId { get; private set; } = string.Empty;
+
     public int BaseCalories { get; private set; }
+
     public string HealthBenefits { get; private set; } = string.Empty;
+
     public bool IsBlocked { get; private set; }
 
     private Product() { }
 
     public static Product Create(
-        string name, string description, decimal price, int stock,
-        string category, string image, int baseCalories, string healthBenefits)
+        string name,
+        string description,
+        decimal price,
+        int stock,
+        string category,
+        string image,
+        int baseCalories,
+        string healthBenefits)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Product name is required.");
-        if (price < 0)
-            throw new ArgumentException("Price cannot be negative.");
-        if (stock < 0)
-            throw new ArgumentException("Stock cannot be negative.");
-
         return new Product
         {
             Name = name,
@@ -41,18 +51,15 @@ public class Product : BaseEntity
         };
     }
 
-    // ── Update method ──
     public void UpdateDetails(
-    string name, string description, decimal price,
-    string category, string image,
-    int baseCalories, string healthBenefits)
+        string name,
+        string description,
+        decimal price,
+        string category,
+        string image,
+        int baseCalories,
+        string healthBenefits)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Product name is required.");
-
-        if (price < 0)
-            throw new ArgumentException("Price cannot be negative.");
-
         Name = name;
         Description = description;
         Price = price;
@@ -64,27 +71,18 @@ public class Product : BaseEntity
         SetUpdatedAt();
     }
 
-    public void ReduceStock(int quantity)
+    public void ToggleBlock()
     {
-        if (quantity > StockQuantity)
-            throw new InvalidOperationException("Insufficient stock.");
-        StockQuantity -= quantity;
-        SetUpdatedAt();
+        IsBlocked = !IsBlocked;
     }
 
     public void AddStock(int quantity)
     {
         StockQuantity += quantity;
-        SetUpdatedAt();
     }
 
-    public void Deactivate()
+    public void ReduceStock(int quantity)
     {
-        IsActive = false;
-        SetUpdatedAt();
-    }
-    public void ToggleBlock()
-    {
-        IsBlocked = !IsBlocked;
+        StockQuantity -= quantity;
     }
 }
