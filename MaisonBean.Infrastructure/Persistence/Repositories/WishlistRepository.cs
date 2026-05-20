@@ -168,9 +168,7 @@ public class WishlistRepository
     {
         return await _db.WishlistItems
 
-            .Where(w =>
-                w.UserId == userId
-            )
+            .Where(w => w.UserId == userId && w.Product != null )
 
             .Include(w => w.Product)
 
@@ -178,7 +176,7 @@ public class WishlistRepository
             {
                 WishlistId = w.Id,
 
-                ProductId = w.Product.Id,
+                ProductId = w.ProductId,
 
                 Name = w.Product.Name,
 

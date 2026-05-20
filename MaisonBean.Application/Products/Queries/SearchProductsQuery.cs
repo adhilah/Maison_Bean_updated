@@ -33,22 +33,31 @@ public class SearchProductsQueryHandler
                 ct);
 
         return products.Select(p =>
-            new ProductSearchDto
-            {
-                Name = p.Name,
+    new ProductSearchDto
+    {
+        Name = p.Name,
 
-                Description = p.Description,
+        Description = p.Description,
 
-                Price = p.Price,
+        Price = p.Price,
 
-                Category = p.Category,
+        Category = p.Category,
 
-                Image = p.Image,
+        Image = p.Image,
 
-                BaseCalories = p.BaseCalories,
+        BaseCalories = p.BaseCalories,
 
-                HealthBenefits =
-                    p.HealthBenefits
-            });
+        HealthBenefits =
+            p.HealthBenefits,
+
+        IsBlocked =
+            p.IsBlocked,
+
+        StockQuantity =
+            p.StockQuantity,
+
+        IsOutOfStock =
+            p.StockQuantity <= 0
+    });
     }
 }

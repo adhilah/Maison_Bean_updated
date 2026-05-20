@@ -46,36 +46,44 @@ public class CreateAddressCommandHandler
     }
 
     public async Task<object> Handle(
-        CreateAddressCommand request,
-        CancellationToken ct)
+    CreateAddressCommand request,
+    CancellationToken ct)
     {
-        var userId =
-            _currentUser.UserId;
-
-        if (string.IsNullOrWhiteSpace(userId))
+        if (!_currentUser.UserId.HasValue)
         {
             throw new UnauthorizedAccessException();
         }
 
+        var userId =
+            _currentUser.UserId.Value;
+
         var address = new Address
         {
             UserId = userId,
+
             DeliveryAddress =
                 request.DeliveryAddress,
+
             City = request.City,
+
             Phone = request.Phone
         };
 
-        await _repo.AddAsync(address, ct);
+        await _repo.AddAsync(
+            address,
+            ct);
 
         await _uow.SaveChangesAsync(ct);
 
         return new
         {
             addressId = address.Id,
+
             deliveryAddress =
                 address.DeliveryAddress,
+
             city = address.City,
+
             phone = address.Phone
         };
     }

@@ -1,27 +1,30 @@
 ﻿using MaisonBean.Application.Interfaces;
+
 using MediatR;
 
 namespace MaisonBean.Application.Addresses.Commands;
 
-public record DeleteAddressCommand(int Id)
-    : IRequest<bool>; 
+public class DeleteAddressCommand
+    : IRequest<Unit>
+{
+    public int Id { get; set; }
+}
 
-
-
-//handler
-public class DeleteAddressHandler
+public class DeleteAddressCommandHandler
     : IRequestHandler<
         DeleteAddressCommand,
-        bool>
+        Unit>
 {
-    private readonly IAddressRepository _repo;
+    private readonly IAddressRepository
+        _repo;
 
-    private readonly IUnitOfWork _uow;
+    private readonly IUnitOfWork
+        _uow;
 
     private readonly ICurrentUserService
         _currentUser;
 
-    public DeleteAddressHandler(
+    public DeleteAddressCommandHandler(
         IAddressRepository repo,
         IUnitOfWork uow,
         ICurrentUserService currentUser)
@@ -33,33 +36,40 @@ public class DeleteAddressHandler
         _currentUser = currentUser;
     }
 
-    public async Task<bool> Handle(
+    public async Task<Unit> Handle(
         DeleteAddressCommand request,
         CancellationToken ct)
     {
-        var userId =
-            _currentUser.UserId;
+        if (!_currentUser.UserId.HasValue)
+        {
+            throw new UnauthorizedAccessException();
+        }
 
-        if (string.IsNullOrEmpty(userId))
-            return false;
+        var userId =
+            _currentUser.UserId.Value;
 
         var address =
             await _repo.GetByIdAsync(
                 request.Id,
-                ct);
+                ct
+            );
 
         if (address == null)
-            return false;
+        {
+            throw new Exception(
+                "Address not found"
+            );
+        }
 
         if (address.UserId != userId)
-            return false;
+        {
+            throw new UnauthorizedAccessException();
+        }
 
-        address.SoftDelete();
-
-        _repo.Update(address);
+        _repo.Delete(address);
 
         await _uow.SaveChangesAsync(ct);
 
-        return true;
+        return Unit.Value;
     }
 }

@@ -4,29 +4,81 @@ namespace MaisonBean.Domain.Entities;
 
 public class Product : BaseEntity
 {
-    public string Name { get; private set; } = string.Empty;
+    // =========================================
+    // PROPERTIES
+    // =========================================
 
-    public string Description { get; private set; } = string.Empty;
+    public string Name
+    {
+        get;
+        private set;
+    } = string.Empty;
 
-    public decimal Price { get; private set; }
+    public string Description
+    {
+        get;
+        private set;
+    } = string.Empty;
 
-    public int StockQuantity { get; private set; }
+    public decimal Price
+    {
+        get;
+        private set;
+    }
 
-    public bool IsActive { get; private set; } = true;
+    public int StockQuantity
+    {
+        get;
+        private set;
+    }
 
-    public string Category { get; private set; } = string.Empty;
+    public bool IsActive
+    {
+        get;
+        private set;
+    } = true;
 
-    public string Image { get; private set; } = string.Empty;
+    public string Category
+    {
+        get;
+        private set;
+    } = string.Empty;
 
-    //public string ImagePublicId { get; private set; } = string.Empty;
+    public string Image
+    {
+        get;
+        private set;
+    } = string.Empty;
 
-    public int BaseCalories { get; private set; }
+    public int BaseCalories
+    {
+        get;
+        private set;
+    }
 
-    public string HealthBenefits { get; private set; } = string.Empty;
+    public string HealthBenefits
+    {
+        get;
+        private set;
+    } = string.Empty;
 
-    public bool IsBlocked { get; private set; }
+    public bool IsBlocked
+    {
+        get;
+        private set;
+    }
 
-    private Product() { }
+    // =========================================
+    // CONSTRUCTOR
+    // =========================================
+
+    private Product()
+    {
+    }
+
+    // =========================================
+    // CREATE
+    // =========================================
 
     public static Product Create(
         string name,
@@ -38,6 +90,70 @@ public class Product : BaseEntity
         int baseCalories,
         string healthBenefits)
     {
+        // =========================
+        // VALIDATIONS
+        // =========================
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException(
+                "Product name is required."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            throw new ArgumentException(
+                "Description is required."
+            );
+        }
+
+        if (price <= 0)
+        {
+            throw new ArgumentException(
+                "Price must be greater than zero."
+            );
+        }
+
+        if (stock < 0)
+        {
+            throw new ArgumentException(
+                "Stock cannot be negative."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(category))
+        {
+            throw new ArgumentException(
+                "Category is required."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(image))
+        {
+            throw new ArgumentException(
+                "Image is required."
+            );
+        }
+
+        if (baseCalories < 0)
+        {
+            throw new ArgumentException(
+                "Calories cannot be negative."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(healthBenefits))
+        {
+            throw new ArgumentException(
+                "Health benefits are required."
+            );
+        }
+
+        // =========================
+        // CREATE PRODUCT
+        // =========================
+
         return new Product
         {
             Name = name,
@@ -47,9 +163,15 @@ public class Product : BaseEntity
             Category = category,
             Image = image,
             BaseCalories = baseCalories,
-            HealthBenefits = healthBenefits
+            HealthBenefits = healthBenefits,
+            IsActive = true,
+            IsBlocked = false
         };
     }
+
+    // =========================================
+    // UPDATE DETAILS
+    // =========================================
 
     public void UpdateDetails(
         string name,
@@ -60,6 +182,55 @@ public class Product : BaseEntity
         int baseCalories,
         string healthBenefits)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException(
+                "Product name is required."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            throw new ArgumentException(
+                "Description is required."
+            );
+        }
+
+        if (price <= 0)
+        {
+            throw new ArgumentException(
+                "Price must be greater than zero."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(category))
+        {
+            throw new ArgumentException(
+                "Category is required."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(image))
+        {
+            throw new ArgumentException(
+                "Image is required."
+            );
+        }
+
+        if (baseCalories < 0)
+        {
+            throw new ArgumentException(
+                "Calories cannot be negative."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(healthBenefits))
+        {
+            throw new ArgumentException(
+                "Health benefits are required."
+            );
+        }
+
         Name = name;
         Description = description;
         Price = price;
@@ -71,18 +242,75 @@ public class Product : BaseEntity
         SetUpdatedAt();
     }
 
+    // =========================================
+    // BLOCK / UNBLOCK
+    // =========================================
+
     public void ToggleBlock()
     {
         IsBlocked = !IsBlocked;
+
+        SetUpdatedAt();
     }
+
+    // =========================================
+    // ACTIVATE / DEACTIVATE
+    // =========================================
+
+    public void Activate()
+    {
+        IsActive = true;
+
+        SetUpdatedAt();
+    }
+
+    public void Deactivate()
+    {
+        IsActive = false;
+
+        SetUpdatedAt();
+    }
+
+    // =========================================
+    // ADD STOCK
+    // =========================================
 
     public void AddStock(int quantity)
     {
+        if (quantity <= 0)
+        {
+            throw new ArgumentException(
+                "Quantity must be greater than zero."
+            );
+        }
+
         StockQuantity += quantity;
+
+        SetUpdatedAt();
     }
+
+    // =========================================
+    // REDUCE STOCK
+    // =========================================
 
     public void ReduceStock(int quantity)
     {
+        if (quantity <= 0)
+        {
+            throw new ArgumentException(
+                "Quantity must be greater than zero."
+            );
+        }
+
+        if (quantity > StockQuantity)
+        {
+            throw new InvalidOperationException(
+                "Insufficient stock."
+            );
+        }
+
         StockQuantity -= quantity;
+
+        SetUpdatedAt();
     }
 }

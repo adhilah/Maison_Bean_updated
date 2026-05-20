@@ -244,22 +244,14 @@ public class AddressController : ControllerBase
     int id,
     CancellationToken ct)
     {
-        var result =
-            await _mediator.Send(
-                new DeleteAddressCommand(id),
-                ct
-            );
+        await _mediator.Send(
+            new DeleteAddressCommand
+            {
+                Id = id
+            },
+            ct
+        );
 
-        return result
-            ? Ok(new
-            {
-                message =
-                    "Address deleted successfully"
-            })
-            : BadRequest(new
-            {
-                message =
-                    "Failed to delete address"
-            });
+        return NoContent();
     }
 }

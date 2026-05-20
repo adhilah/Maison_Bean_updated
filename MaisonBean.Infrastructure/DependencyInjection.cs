@@ -1,6 +1,7 @@
 ﻿using MaisonBean.Application.Common;
 using MaisonBean.Application.Interfaces;
 using MaisonBean.Domain.Entities;
+using MaisonBean.Infrastructure.Configurations;
 using MaisonBean.Infrastructure.Persistence;
 using MaisonBean.Infrastructure.Persistence.Repositories;
 using MaisonBean.Infrastructure.Repositories;
@@ -30,6 +31,15 @@ public static class DependencyInjection
         })
         .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<ICookieService, CookieService>();
+        services.Configure<CloudinarySettings>(
+        configuration.GetSection("Cloudinary")
+);
+
+        services.AddScoped<IImageService,
+            CloudinaryService>();
 
         services.Configure<JwtSettings>(
             configuration.GetSection("JwtSettings"));

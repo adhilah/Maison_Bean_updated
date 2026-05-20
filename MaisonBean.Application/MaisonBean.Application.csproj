@@ -17,4 +17,8 @@
 		<ProjectReference Include="..\\MaisonBean.Domain\\MaisonBean.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="NewFolder\" />
+	</ItemGroup>
+
 </Project>

@@ -28,6 +28,7 @@ public class GetProductsByCategoryQueryHandler : IRequestHandler<GetProductsByCa
                 Description = p.Description,
                 Price = p.Price,
                 StockQuantity = p.StockQuantity,
+                IsOutOfStock = p.StockQuantity <= 0,
                 IsActive = p.IsActive,
                 IsBlocked = p.IsBlocked,
                 Category = p.Category,

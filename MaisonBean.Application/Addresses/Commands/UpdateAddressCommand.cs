@@ -47,16 +47,16 @@ public class UpdateAddressCommandHandler
     }
 
     public async Task<Unit> Handle(
-        UpdateAddressCommand request,
-        CancellationToken ct)
+     UpdateAddressCommand request,
+     CancellationToken ct)
     {
-        var userId =
-            _currentUser.UserId;
-
-        if (string.IsNullOrWhiteSpace(userId))
+        if (!_currentUser.UserId.HasValue)
         {
             throw new UnauthorizedAccessException();
         }
+
+        var userId =
+            _currentUser.UserId.Value;
 
         var address =
             await _repo.GetByIdAsync(

@@ -12,10 +12,14 @@ public class AddressRepository : IAddressRepository
         _context = context;
     }
 
-    public async Task<List<Address>> GetByUserIdAsync(string userId, CancellationToken ct)
+    public async Task<List<Address>>
+GetByUserIdAsync(int userId, CancellationToken ct)
     {
         return await _context.Addresses
-            .Where(a => a.UserId == userId && !a.IsDeleted)
+            .Where(a =>
+                a.UserId == userId &&
+                !a.IsDeleted
+            )
             .ToListAsync(ct);
     }
 
@@ -39,6 +43,8 @@ public class AddressRepository : IAddressRepository
     //delete address
     public void Delete(Address address)
     {
-        _context.Addresses.Remove(address);
+        address.SoftDelete();
+
+        _context.Addresses.Update(address);
     }
 }

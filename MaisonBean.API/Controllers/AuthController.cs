@@ -1,12 +1,7 @@
 ﻿using MaisonBean.Application.Auth.Commands;
-using MaisonBean.Application.Interfaces;
-using Microsoft.AspNetCore.RateLimiting;
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using System.Security.Claims;
 
 namespace MaisonBean.API.Controllers;
 
@@ -16,334 +11,92 @@ public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    private readonly IAuthService _authService;
-
-    private readonly IWebHostEnvironment _environment;
-
     public AuthController(
-        IMediator mediator,
-        IAuthService authService,
-        IWebHostEnvironment environment)
+        IMediator mediator)
     {
         _mediator = mediator;
-
-        _authService = authService;
-
-        _environment = environment;
     }
 
-    // =====================================================
+    // =========================================
     // REGISTER
-    // =====================================================
+    // =========================================
 
     [HttpPost("register")]
-    [EnableRateLimiting("login")]
     public async Task<IActionResult> Register(
-        [FromBody] RegisterCommand cmd)
+        [FromBody] RegisterCommand command)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(new
-            {
-                success = false,
-
-                errors = ModelState
-                    .Where(x =>
-                        x.Value.Errors.Count > 0)
-
-                    .ToDictionary(
-                        kvp => kvp.Key,
-
-                        kvp => kvp.Value.Errors
-                            .Select(e =>
-                                e.ErrorMessage)
-                    )
-            });
-        }
-
         var result =
-            await _mediator.Send(cmd);
+            await _mediator.Send(command);
 
         if (!result.Success)
         {
-            return Conflict(new
-            {
-                success = false,
-
-                message =
-                    result.Message
-            });
+            return BadRequest(result);
         }
 
-        return StatusCode(201, new
-        {
-            success = true,
-
-            message =
-                result.Message
-        });
+        return Ok(result);
     }
 
-    // =====================================================
+    // =========================================
     // LOGIN
-    // =====================================================
+    // =========================================
 
     [HttpPost("login")]
-    [EnableRateLimiting("login")]
     public async Task<IActionResult> Login(
-        [FromBody] LoginCommand cmd)
+        [FromBody] LoginCommand command)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(new
-            {
-                success = false,
-
-                errors = ModelState
-                    .Where(x =>
-                        x.Value.Errors.Count > 0)
-
-                    .ToDictionary(
-                        kvp => kvp.Key,
-
-                        kvp => kvp.Value.Errors
-                            .Select(e =>
-                                e.ErrorMessage)
-                    )
-            });
-        }
-
         var result =
-            await _mediator.Send(cmd);
+            await _mediator.Send(command);
 
         if (!result.Success)
         {
-            return Unauthorized(new
-            {
-                success = false,
-
-                message =
-                    result.Message
-            });
+            return Unauthorized(result);
         }
 
-        // =================================================
-        // ACCESS TOKEN COOKIE
-        // =================================================
-
-        Response.Cookies.Append(
-            "accessToken",
-            result.Token!,
-            CreateAuthCookieOptions(
-                DateTime.UtcNow
-                    .AddMinutes(3)
-            ));
-
-        // =================================================
-        // REFRESH TOKEN COOKIE
-        // =================================================
-
-        Response.Cookies.Append(
-            "refreshToken",
-            result.RefreshToken!,
-            CreateAuthCookieOptions(
-                DateTime.UtcNow
-                    .AddDays(7)
-            ));
-
-        return Ok(new
-        {
-            success = true,
-
-            message =
-                "Login successful",
-
-            user = result.User
-        });
+        return Ok(result);
     }
 
-    // =====================================================
+    // =========================================
     // REFRESH TOKEN
-    // =====================================================
+    // =========================================
 
     [HttpPost("refresh")]
-    [EnableRateLimiting("login")]
     public async Task<IActionResult> Refresh()
     {
-        var refreshToken =
-            Request.Cookies["refreshToken"];
-
-        if (string.IsNullOrEmpty(refreshToken))
-        {
-            return Unauthorized(new
-            {
-                success = false,
-
-                message =
-                    "Refresh token missing"
-            });
-        }
-
         var result =
-            await _authService
-                .RefreshTokenAsync(
-                    refreshToken
-                );
+            await _mediator.Send(
+                new RefreshTokenCommand()
+            );
 
         if (!result.Success)
         {
-            return Unauthorized(new
-            {
-                success = false,
-
-                message =
-                    result.Message
-            });
+            return Unauthorized(result);
         }
 
-        // =================================================
-        // ACCESS TOKEN COOKIE
-        // =================================================
-
-        Response.Cookies.Append(
-            "accessToken",
-            result.Token!,
-            CreateAuthCookieOptions(
-                DateTime.UtcNow
-                    .AddMinutes(15)
-            ));
-
-        // =================================================
-        // REFRESH TOKEN COOKIE
-        // =================================================
-
-        Response.Cookies.Append(
-            "refreshToken",
-            result.RefreshToken!,
-            CreateAuthCookieOptions(
-                DateTime.UtcNow
-                    .AddDays(7)
-            ));
-
-        return Ok(new
-        {
-            success = true,
-
-            message =
-                "Token refreshed"
-        });
+        return Ok(result);
     }
 
-    // =====================================================
+    // =========================================
     // LOGOUT
-    // =====================================================
+    // =========================================
 
     [Authorize]
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout(
-        CancellationToken ct)
+    public async Task<IActionResult> Logout()
     {
-        var userId =
-    User.FindFirstValue("id");
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized(new
-            {
-                success = false,
-
-                message =
-                    "User not authenticated"
-            });
-        }
-
-        if (!int.TryParse(userId, out var parsedUserId))
-        {
-            return Unauthorized(new
-            {
-                success = false,
-
-                message =
-                    "User not authenticated"
-            });
-        }
-
         var result =
             await _mediator.Send(
-                new LogoutCommand
-                {
-                    UserId =
-                        parsedUserId
-                },
-                ct);
+                new LogoutCommand()
+            );
 
         if (!result)
         {
-            return BadRequest(new
-            {
-                success = false,
-
-                message =
-                    "Logout failed"
-            });
+            return BadRequest();
         }
-
-        // =================================================
-        // DELETE COOKIES
-        // =================================================
-
-        Response.Cookies.Delete(
-            "accessToken",
-            CreateDeleteCookieOptions());
-
-        Response.Cookies.Delete(
-            "refreshToken",
-            CreateDeleteCookieOptions());
 
         return Ok(new
         {
-            success = true,
-
             message =
                 "Logged out successfully"
         });
-    }
-
-    private CookieOptions CreateAuthCookieOptions(
-        DateTime expires)
-    {
-        var secure =
-            ShouldUseSecureCookies();
-
-        return new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.None,
-            Expires = DateTime.UtcNow.AddDays(7)
-        };
-    }
-
-    private CookieOptions CreateDeleteCookieOptions()
-    {
-        var secure =
-            ShouldUseSecureCookies();
-
-        return new CookieOptions
-        {
-            HttpOnly = true,
-
-            Secure = true,
-
-            SameSite = SameSiteMode.None,
-
-            Expires = DateTime.UtcNow.AddDays(7)
-        };
-
-    }
-
-    private bool ShouldUseSecureCookies()
-    {
-        return !_environment.IsDevelopment();
     }
 }

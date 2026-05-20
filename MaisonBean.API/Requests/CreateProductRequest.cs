@@ -1,9 +1,9 @@
-﻿namespace MaisonBean.Application.Products.Queries;
+﻿using Microsoft.AspNetCore.Http;
 
-public class ProductDto
+namespace MaisonBean.API.Requests;
+
+public class CreateProductRequest
 {
-    public int Id { get; set; }
-
     public string Name { get; set; }
         = string.Empty;
 
@@ -12,21 +12,16 @@ public class ProductDto
 
     public decimal Price { get; set; }
 
-    public int StockQuantity { get; set; }
-
-    public bool IsActive { get; set; }
-
-    public bool IsBlocked { get; set; }
+    public int Stock { get; set; }
 
     public string Category { get; set; }
         = string.Empty;
 
-    public string Image { get; set; }
-        = string.Empty;
+    public IFormFile Image { get; set; }
+        = default!;
 
     public int BaseCalories { get; set; }
 
     public string HealthBenefits { get; set; }
         = string.Empty;
-    public bool IsOutOfStock { get; set; }
 }

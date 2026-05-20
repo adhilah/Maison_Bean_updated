@@ -1,4 +1,5 @@
 ﻿using MaisonBean.Application.Interfaces;
+
 using MaisonBean.Domain.Entities;
 
 using MediatR;
@@ -15,7 +16,8 @@ public class GetAddressesQueryHandler
         GetAddressesQuery,
         List<Address>>
 {
-    private readonly IAddressRepository _repo;
+    private readonly IAddressRepository
+        _repo;
 
     private readonly ICurrentUserService
         _currentUser;
@@ -33,13 +35,13 @@ public class GetAddressesQueryHandler
         GetAddressesQuery request,
         CancellationToken ct)
     {
-        var userId =
-            _currentUser.UserId;
-
-        if (string.IsNullOrWhiteSpace(userId))
+        if (!_currentUser.UserId.HasValue)
         {
             throw new UnauthorizedAccessException();
         }
+
+        var userId =
+            _currentUser.UserId.Value;
 
         return await _repo.GetByUserIdAsync(
             userId,
