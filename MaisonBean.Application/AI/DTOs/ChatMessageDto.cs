@@ -1,8 +1,4 @@
-﻿// ==========================
-// FILE: ChatMessageDto.cs
-// ==========================
-
-namespace MaisonBean.Application.AI.DTOs;
+﻿namespace MaisonBean.Application.AI.DTOs;
 
 public class ChatMessageDto
 {

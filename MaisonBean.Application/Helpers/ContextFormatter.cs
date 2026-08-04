@@ -1,8 +1,4 @@
-﻿// ====================================
-// FILE: ContextFormatter.cs
-// ====================================
-
-using MaisonBean.Application.AI.DTOs;
+﻿using MaisonBean.Application.AI.DTOs;
 using System.Text;
 
 namespace MaisonBean.Application.AI.Helpers;

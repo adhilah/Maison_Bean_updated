@@ -17,10 +17,7 @@ public class AuthController : ControllerBase
         _mediator = mediator;
     }
 
-    // =========================================
     // REGISTER
-    // =========================================
-
     [HttpPost("register")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterCommand command)
@@ -36,10 +33,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    // =========================================
     // LOGIN
-    // =========================================
-
     [HttpPost("login")]
     public async Task<IActionResult> Login(
         [FromBody] LoginCommand command)
@@ -55,10 +49,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    // =========================================
     // REFRESH TOKEN
-    // =========================================
-
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh()
     {
@@ -75,10 +66,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    // =========================================
     // LOGOUT
-    // =========================================
-
     [Authorize]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()

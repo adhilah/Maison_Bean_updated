@@ -1,7 +1,5 @@
-﻿// =====================================
-// FILE: DeleteConversationCommand.cs
-// =====================================
-
+﻿
+// DeleteConversationCommand.cs
 using MaisonBean.Application.AI.Interfaces;
 using MaisonBean.Application.Interfaces;
 using MediatR;

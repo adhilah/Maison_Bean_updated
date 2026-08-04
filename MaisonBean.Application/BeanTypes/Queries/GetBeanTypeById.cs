@@ -19,7 +19,7 @@ public class GetBeanTypeByIdQueryHandler : IRequestHandler<GetBeanTypeByIdQuery,
     {
         var entity = await _repo.GetByIdAsync(request.Id, ct);
 
-        if (entity == null || entity.IsBlocked) // 🔥 FIX
+        if (entity == null || entity.IsBlocked)
             throw new ArgumentException("Bean type not found.");
 
         return new BeanTypeDto

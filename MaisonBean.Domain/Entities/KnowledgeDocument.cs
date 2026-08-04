@@ -1,8 +1,4 @@
-﻿// ====================================
-// FILE: KnowledgeDocument.cs
-// ====================================
-
-using MaisonBean.Domain.Common;
+﻿using MaisonBean.Domain.Common;
 using MaisonBean.Domain.Enums;
 
 namespace MaisonBean.Domain.Entities;
@@ -17,9 +13,7 @@ public class KnowledgeDocument : BaseEntity
 
     public string Source { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; }
-        = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }  = DateTime.UtcNow;
 
-    public ICollection<EmbeddingRecord> Embeddings { get; set; }
-        = new List<EmbeddingRecord>();
+    public ICollection<EmbeddingRecord> Embeddings { get; set; } = new List<EmbeddingRecord>();
 }

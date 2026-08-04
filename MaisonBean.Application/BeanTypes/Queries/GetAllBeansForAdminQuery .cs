@@ -1,7 +1,5 @@
-//======================================
-// GET ALL BEANS FOR ADMIN - QUERY
-//======================================
 
+// GET ALL BEANS FOR ADMIN
 using MaisonBean.Application.Interfaces;
 using MaisonBean.Domain.Entities;
 using MediatR;

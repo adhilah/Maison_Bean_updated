@@ -12,7 +12,7 @@ public class PlaceOrderRequest : IValidatableObject
 
     public string? UpiId { get; set; }
 
-    // 🔥 Conditional validation
+    //Conditional validation
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         // Normalize for safety

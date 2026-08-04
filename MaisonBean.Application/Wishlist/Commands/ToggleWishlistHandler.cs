@@ -42,10 +42,7 @@ public class ToggleWishlistHandler
                     ct
                 );
 
-        // =====================================
         // REMOVE IF EXISTS
-        // =====================================
-
         if (existing != null)
         {
             _wishlist.Remove(existing);
@@ -61,10 +58,7 @@ public class ToggleWishlistHandler
             };
         }
 
-        // =====================================
         // GET PRODUCT
-        // =====================================
-
         var product =
             await _products
                 .GetByIdAsync(
@@ -79,20 +73,15 @@ public class ToggleWishlistHandler
             );
         }
 
-        // =====================================
         // CREATE WISHLIST ITEM
-        // =====================================
-
         var item = new WishlistItem
         {
             UserId = request.UserId,
             ProductId = request.ProductId
         };
 
-        // =====================================
+      
         // SAVE
-        // =====================================
-
         await _wishlist.AddAsync(
             item,
             ct

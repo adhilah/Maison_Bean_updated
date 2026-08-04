@@ -130,7 +130,6 @@ public class OrderController : ControllerBase
     }
 
     //CANCEL ORDER (STATUS = cancelled)
-    
     [HttpPatch("{id}/cancel")]
     public async Task<IActionResult> Cancel(int id, CancellationToken ct)
     {
@@ -205,7 +204,7 @@ public class OrderController : ControllerBase
     [HttpPatch("{id}/status/ad")]
     public async Task<IActionResult> UpdateStatus(
     int id,
-    [FromQuery] OrderStatus newStatus)   // creates dropdown
+    [FromQuery] OrderStatus newStatus)
     {
         var command = new UpdateOrderStatusCommand
         {

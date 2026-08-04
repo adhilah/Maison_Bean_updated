@@ -20,7 +20,7 @@ public class GetMilkOptionsQueryHandler : IRequestHandler<GetMilkOptionsQuery, L
         var list = await _repo.GetAllAsync(ct);
 
         return list
-            .Where(x => !x.IsBlocked) // 🔥 FILTER HERE
+            .Where(x => !x.IsBlocked)
             .Select(x => new MilkOptionDto
             {
                 Id = x.Id,

@@ -101,7 +101,6 @@ public class AddToCartCommandHandler
         if (cmd.Quantity > product.StockQuantity)
             throw new InvalidOperationException("Insufficient stock");
 
-        // 🔥 Customization handling
         decimal beanPrice = 0;
         decimal milkPrice = 0;
 
@@ -118,7 +117,6 @@ public class AddToCartCommandHandler
             var milk = await _milks.GetByIdAsync(cmd.MilkId!.Value, ct)
                 ?? throw new KeyNotFoundException("Invalid milk");
 
-            // 🚨 IMPORTANT: prevent blocked options
             if (bean.IsBlocked)
                 throw new InvalidOperationException("Bean is not available");
 
@@ -131,7 +129,6 @@ public class AddToCartCommandHandler
 
         decimal unitPrice = product.Price + beanPrice + milkPrice;
 
-        // 🔥 UPDATED: include customization fields
         var existing = await _cart.FindExistingAsync(
             cmd.UserId,
             cmd.ProductId,
@@ -174,7 +171,7 @@ public class AddToCartCommandHandler
                 cmd.MilkId
             );
 
-            // 🔥 NEW (store customization)
+
             item.SetCustomization(cmd.Strength, cmd.Temp, cmd.Sweetness);
 
             await _cart.AddAsync(item, ct);

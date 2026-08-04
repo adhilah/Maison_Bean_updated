@@ -22,7 +22,7 @@ public class PlaceSingleOrderRequest : IValidatableObject
 
     public string? UpiId { get; set; }
 
-    // Conditional + Business Validation
+    // Conditional and  Business Validation
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         var method = PaymentMethod?.Trim().ToLower();
@@ -54,7 +54,7 @@ public class PlaceSingleOrderRequest : IValidatableObject
             }
         }
 
-        // 🔹 Payment validation
+        // Payment validation
         if (method == "upi")
         {
             if (string.IsNullOrWhiteSpace(UpiId))

@@ -14,10 +14,7 @@ public class MilkOptionRepository : IMilkOptionRepository
         _db = db;
     }
 
-    //======================================
     // GET BY ID
-    //======================================
-
     public async Task<MilkOption?> GetByIdAsync(
         int id,
         CancellationToken ct)
@@ -26,11 +23,7 @@ public class MilkOptionRepository : IMilkOptionRepository
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(x => x.Id == id, ct);
     }
-
-    //======================================
     // GET ALL PUBLIC
-    //======================================
-
     public async Task<List<MilkOption>> GetAllAsync(
         CancellationToken ct)
     {
@@ -40,9 +33,7 @@ public class MilkOptionRepository : IMilkOptionRepository
             .ToListAsync(ct);
     }
 
-    //======================================
     // GET ALL FOR ADMIN
-    //======================================
 
     public async Task<List<MilkOption>>
 GetAllForAdminAsync(
@@ -55,10 +46,7 @@ GetAllForAdminAsync(
             .ToListAsync(ct);
     }
 
-    //======================================
     // EXISTS BY NAME
-    //======================================
-
     public async Task<bool> ExistsByNameAsync(
         string name,
         CancellationToken ct)
@@ -69,10 +57,7 @@ GetAllForAdminAsync(
                 ct);
     }
 
-    //======================================
     // ADD
-    //======================================
-
     public async Task AddAsync(
         MilkOption entity,
         CancellationToken ct)
@@ -80,19 +65,13 @@ GetAllForAdminAsync(
         await _db.MilkOptions.AddAsync(entity, ct);
     }
 
-    //======================================
     // UPDATE
-    //======================================
-
     public void Update(MilkOption entity)
     {
         _db.MilkOptions.Update(entity);
     }
 
-    //======================================
     // DELETE
-    //======================================
-
     public void Delete(MilkOption entity)
     {
         _db.MilkOptions.Remove(entity);

@@ -14,10 +14,7 @@ public class BeanTypeRepository : IBeanTypeRepository
         _db = db;
     }
 
-    //======================================
     // GET BY ID
-    //======================================
-
     public async Task<BeanType?> GetByIdAsync(
         int id,
         CancellationToken ct)
@@ -27,10 +24,7 @@ public class BeanTypeRepository : IBeanTypeRepository
             .FirstOrDefaultAsync(x => x.Id == id, ct);
     }
 
-    //======================================
     // GET ALL PUBLIC
-    //======================================
-
     public async Task<List<BeanType>> GetAllAsync(
         CancellationToken ct)
     {
@@ -40,9 +34,7 @@ public class BeanTypeRepository : IBeanTypeRepository
             .ToListAsync(ct);
     }
 
-    //======================================
     // GET ALL FOR ADMIN
-    //======================================
 
     public async Task<List<BeanType>>
  GetAllForAdminAsync(
@@ -54,9 +46,7 @@ public class BeanTypeRepository : IBeanTypeRepository
             .OrderBy(x => x.Name)
             .ToListAsync(ct);
     }
-    //======================================
     // EXISTS BY NAME
-    //======================================
 
     public async Task<bool> ExistsByNameAsync(
         string name,
@@ -68,10 +58,7 @@ public class BeanTypeRepository : IBeanTypeRepository
                 ct);
     }
 
-    //======================================
     // ADD
-    //======================================
-
     public async Task AddAsync(
         BeanType entity,
         CancellationToken ct)
@@ -79,19 +66,13 @@ public class BeanTypeRepository : IBeanTypeRepository
         await _db.BeanTypes.AddAsync(entity, ct);
     }
 
-    //======================================
     // UPDATE
-    //======================================
-
     public void Update(BeanType entity)
     {
         _db.BeanTypes.Update(entity);
     }
 
-    //======================================
     // DELETE
-    //======================================
-
     public void Delete(BeanType entity)
     {
         _db.BeanTypes.Remove(entity);

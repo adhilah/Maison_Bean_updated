@@ -36,10 +36,8 @@ public class UserRepository
             ct
         );
 
-    // =========================================
     // GET USER WITH RELATIONS
-    // =========================================
-
+    //==============================
     //public async Task<AppUser?>
     //    GetUserWithRelationsAsync(
     //        int id,

@@ -20,7 +20,7 @@ public class GetBeanTypesQueryHandler : IRequestHandler<GetBeanTypesQuery, List<
         var list = await _repo.GetAllAsync(ct);
 
         return list
-            .Where(x => !x.IsBlocked) // 🔥 FILTER
+            .Where(x => !x.IsBlocked)
             .Select(x => new BeanTypeDto
             {
                 Id = x.Id,

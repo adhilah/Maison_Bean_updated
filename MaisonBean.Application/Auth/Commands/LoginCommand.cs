@@ -1,50 +1,9 @@
-﻿//using MaisonBean.Application.Interfaces;
-//using MediatR;
-
-//namespace MaisonBean.Application.Auth.Commands;
-
-//public class LoginCommand : IRequest<LoginResult>
-//{
-//    public string Email { get; set; } = string.Empty;
-//    public string Password { get; set; } = string.Empty;
-//}
-
-//public class LoginResult
-//{
-//    public bool Success { get; set; }
-//    public string? Token { get; set; }
-//    public string? RefreshToken { get; set; }
-//    public string? Message { get; set; }
-//    public UserDto? User { get; set; }
-//}
-
-//public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResult>
-//{
-//    private readonly IAuthService _authService;
-
-//    public LoginCommandHandler(IAuthService authService)
-//    {
-//        _authService = authService;
-//    }
-
-//    public async Task<LoginResult> Handle(LoginCommand request, CancellationToken ct)
-//    {
-//        return await _authService.LoginAsync(request, ct);
-//    }
-//}
-
-
-
-using MaisonBean.Application.Interfaces;
+﻿using MaisonBean.Application.Interfaces;
 using MediatR;
 
 namespace MaisonBean.Application.Auth.Commands;
 
-
-//==============================
 //LoginCommand
-//==============================
-
 public class LoginCommand : IRequest<LoginResult>
 {
     public string Email { get; set; }
@@ -54,11 +13,7 @@ public class LoginCommand : IRequest<LoginResult>
         = string.Empty;
 }
 
-
-
-//==============================
 //LoginResult
-//==============================
 public class LoginResult
 {
     public bool Success { get; set; }
@@ -72,13 +27,7 @@ public class LoginResult
     public UserDto? User { get; set; }
 }
 
-
-
-//==============================
 //LoginHandler
-//==============================
-
-
 public class LoginCommandHandler
     : IRequestHandler<
         LoginCommand,

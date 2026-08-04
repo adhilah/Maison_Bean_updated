@@ -6,8 +6,6 @@ namespace MaisonBean.Application.AI.Commands;
 public class SaveConversationCommand : IRequest<int>
 {
     public string Title { get; set; } = string.Empty;
-
-    // Internal use only
     public string UserId { get; set; } = string.Empty;
 }
 

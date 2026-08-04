@@ -15,11 +15,7 @@ public class AppDbContext
     ) : base(options)
     {
     }
-
-    // =====================================================
     // DB SETS
-    // =====================================================
-
     public DbSet<Product> Products
     { get; set; }
 
@@ -44,36 +40,22 @@ public class AppDbContext
     public DbSet<WishlistItem> WishlistItems
     { get; set; }
 
-    // =====================================================
     // MODEL CONFIGURATION
-    // =====================================================
-
     protected override void OnModelCreating(
         ModelBuilder builder
     )
     {
         base.OnModelCreating(builder);
-
-        // =================================================
         // ORDER RELATIONSHIP
-        // =================================================
-
         builder.Entity<Order>()
             .HasMany(o => o.Items)
             .WithOne(i => i.Order)
             .HasForeignKey(i => i.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // =================================================
         // ADDRESS
-        // =================================================
-
         builder.Entity<Address>();
-
-        // =================================================
         // PRODUCT
-        // =================================================
-
         builder.Entity<Product>()
             .Property(p => p.Price)
             .HasPrecision(18, 2);
@@ -83,11 +65,7 @@ public class AppDbContext
             .HasQueryFilter(
                 p => !p.IsBlocked
             );
-
-        // =================================================
         // BEAN TYPE
-        // =================================================
-
         builder.Entity<BeanType>()
             .HasQueryFilter(
                 b => !b.IsBlocked
@@ -96,11 +74,7 @@ public class AppDbContext
         builder.Entity<BeanType>()
             .Property(b => b.PriceAdd)
             .HasPrecision(18, 2);
-
-        // =================================================
         // MILK OPTION
-        // =================================================
-
         builder.Entity<MilkOption>()
             .HasQueryFilter(
                 m => !m.IsBlocked
@@ -110,10 +84,7 @@ public class AppDbContext
             .Property(m => m.PriceAdd)
             .HasPrecision(18, 2);
 
-        // =================================================
         // ORDER
-        // =================================================
-
         builder.Entity<Order>()
             .Property(o => o.Subtotal)
             .HasPrecision(18, 2);
@@ -130,10 +101,7 @@ public class AppDbContext
             .Property(o => o.Status)
             .HasConversion<string>();
 
-        // =================================================
         // ORDER ITEM
-        // =================================================
-
         builder.Entity<OrderItem>()
             .Property(o => o.UnitPrice)
             .HasPrecision(18, 2);
@@ -146,18 +114,12 @@ public class AppDbContext
             .Property(o => o.MilkPriceAdd)
             .HasPrecision(18, 2);
 
-        // =================================================
         // APPLY CONFIGURATIONS
-        // =================================================
-
         builder.ApplyConfigurationsFromAssembly(
             typeof(AppDbContext).Assembly
         );
 
-        // =================================================
         // WISHLIST
-        // =================================================
-
         builder.Entity<WishlistItem>(entity =>
         {
             entity.HasKey(w => w.Id);
@@ -189,11 +151,7 @@ public class AppDbContext
             ).IsUnique();
         });
     }
-
-    // =====================================================
     // SAVE CHANGES
-    // =====================================================
-
     public override async Task<int> SaveChangesAsync(
         CancellationToken ct = default
     )

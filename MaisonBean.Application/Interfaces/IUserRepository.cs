@@ -14,10 +14,4 @@ public interface IUserRepository
         CancellationToken ct = default
     );
 
-    // ADD THIS
-
-    //Task<AppUser?> GetUserWithRelationsAsync(
-    //    int id,
-    //    CancellationToken ct = default
-    //);
 }

@@ -36,7 +36,7 @@ public class CartController : ControllerBase
         return parsedUserId;
     }
 
-    // ✅ GET CART
+    //GET CART
     [HttpGet]
     public async Task<IActionResult> GetCart(CancellationToken ct)
     {
@@ -45,7 +45,7 @@ public class CartController : ControllerBase
         return Ok(cart);
     }
 
-    // ✅ ADD TO CART
+    //ADD TO CART
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] AddToCartCommand cmd, CancellationToken ct)
     {
@@ -61,7 +61,7 @@ public class CartController : ControllerBase
         });
     }
 
-    // ✅ UPDATE QUANTITY
+    //UPDATE QUANTITY
     [HttpPatch]
     public async Task<IActionResult> Update([FromBody] UpdateCartItemCommand cmd, CancellationToken ct)
     {
@@ -72,7 +72,7 @@ public class CartController : ControllerBase
         return Ok(new { message = "Cart updated" });
     }
 
-    // ✅ REMOVE ITEM
+    //REMOVE ITEM
     [HttpDelete("{id}")]
     public async Task<IActionResult> Remove(int id, CancellationToken ct)
     {
@@ -81,7 +81,7 @@ public class CartController : ControllerBase
         return Ok(new { message = "Item removed" });
     }
 
-    // ✅ CLEAR CART
+    //CLEAR CART
     [HttpDelete("clear")]
     public async Task<IActionResult> Clear(CancellationToken ct)
     {

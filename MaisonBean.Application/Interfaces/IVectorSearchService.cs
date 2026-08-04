@@ -1,8 +1,4 @@
-﻿// =================================
-// FILE: IVectorSearchService.cs
-// =================================
-
-using MaisonBean.Application.AI.DTOs;
+﻿using MaisonBean.Application.AI.DTOs;
 
 namespace MaisonBean.Application.AI.Interfaces;
 

@@ -26,10 +26,7 @@ public class OllamaChatService
         _context = context;
     }
 
-    // =====================================
     // ASK AI
-    // =====================================
-
     public async Task<ChatResponseDto>
         AskAsync(
         string message,
@@ -37,10 +34,7 @@ public class OllamaChatService
         string? userId,
         CancellationToken ct)
     {
-        // =====================================
         // GET PRODUCTS FROM DATABASE
-        // =====================================
-
         var products = await _context.Products
             .AsNoTracking()
             .Take(8)
@@ -51,19 +45,6 @@ public class OllamaChatService
                 x.Price
             })
             .ToListAsync(ct);
-
-        // =====================================
-        // BUILD PRODUCT CONTEXT
-        // =====================================
-
-        //var productContext =
-        //    string.Join(
-        //        "\n",
-
-        //        products.Select(p =>
-        //            $"{p.Name} - {p.Description} - ₹{p.Price}")
-        //    );
-
         var productContext =
     string.Join(
         "\n\n",
@@ -76,10 +57,7 @@ Description: {p.Description}
 Price: ₹{p.Price}
 """)
     );
-
-        // =====================================
         // AI PROMPT
-        // =====================================
 
         var prompt = $@"
 You are Maison Bean AI,
@@ -116,11 +94,7 @@ Short answer
 Reason:
 Short reason
 ";
-
-        // =====================================
         // OLLAMA REQUEST
-        // =====================================
-
         var requestBody = new
         {
             model = "phi3:latest",
@@ -162,10 +136,7 @@ Short reason
                 $"Ollama Error: {error}");
         }
 
-        // =====================================
         // READ RESPONSE
-        // =====================================
-
         var responseJson =
             await response.Content
                 .ReadAsStringAsync(ct);
@@ -199,10 +170,7 @@ Short reason
                 "Currently unavailable in our menu.";
         }
 
-        // =====================================
         // RETURN DTO
-        // =====================================
-
         return new ChatResponseDto
         {
             Response =
@@ -222,11 +190,7 @@ Short reason
                 DateTime.UtcNow
         };
     }
-
-    // =====================================
-    // RECOMMENDATIONS
-    // =====================================
-
+     // RECOMMENDATIONS
     public async Task<List<RecommendationDto>>
         GenerateRecommendationsAsync(
         string prompt,
@@ -257,10 +221,7 @@ Short reason
             .ToList();
     }
 
-    // =====================================
     // SUGGESTIONS
-    // =====================================
-
     public async Task<List<string>>
         GetSuggestionsAsync(
         string prompt,

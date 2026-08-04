@@ -22,11 +22,9 @@ public class ChatController : ControllerBase
         _mediator = mediator;
     }
 
-    // =========================================
-    // ASK AI
-    // POST: api/chat
-    // =========================================
 
+    // ASK AI
+    // =========================================
     //[HttpPost]
     //public async Task<IActionResult> AskAI(
     //    AskAICommand command)
@@ -60,11 +58,7 @@ public class ChatController : ControllerBase
             });
         }
     }
-    // =========================================
     // AI RECOMMENDATIONS
-    // POST: api/chat/recommendations
-    // =========================================
-
     [HttpPost("recommendations")]
     public async Task<IActionResult> GenerateRecommendations(
         GenerateRecommendationCommand command)
@@ -74,11 +68,7 @@ public class ChatController : ControllerBase
         return Ok(response);
     }
 
-    // =========================================
     // CREATE CONVERSATION
-    // POST: api/chat/conversation
-    // =========================================
-
     [HttpPost("conversation")]
     public async Task<IActionResult> CreateConversation(
         SaveConversationCommand command)
@@ -94,11 +84,7 @@ public class ChatController : ControllerBase
         });
     }
 
-    // =========================================
     // DELETE CONVERSATION
-    // DELETE: api/chat/conversation/{id}
-    // =========================================
-
     [HttpDelete("conversation/{id}")]
     public async Task<IActionResult> DeleteConversation(
         int id)
@@ -118,11 +104,7 @@ public class ChatController : ControllerBase
         });
     }
 
-    // =========================================
     // GET CHAT HISTORY
-    // GET: api/chat/conversation/{id}
-    // =========================================
-
     [HttpGet("conversation/{id}")]
     public async Task<IActionResult> GetConversationHistory(
         int id)
@@ -138,11 +120,7 @@ public class ChatController : ControllerBase
         return Ok(response);
     }
 
-    // =========================================
     // GET USER CONVERSATIONS
-    // GET: api/chat/conversations
-    // =========================================
-
     [HttpGet("conversations")]
     public async Task<IActionResult> GetUserConversations()
     {
@@ -156,11 +134,7 @@ public class ChatController : ControllerBase
         return Ok(response);
     }
 
-    // =========================================
     // SEARCH KNOWLEDGE
-    // GET: api/chat/search?query=
-    // =========================================
-
     [HttpGet("search")]
     public async Task<IActionResult> SearchKnowledge(
         [FromQuery] string query)
@@ -177,11 +151,7 @@ public class ChatController : ControllerBase
         return Ok(response);
     }
 
-    // =========================================
     // GET AI SUGGESTIONS
-    // GET: api/chat/suggestions?prompt=
-    // =========================================
-
     [HttpGet("suggestions")]
     public async Task<IActionResult> GetSuggestions(
         [FromQuery] string prompt)
@@ -196,10 +166,7 @@ public class ChatController : ControllerBase
         return Ok(response);
     }
 
-    // =========================================
     // HELPER
-    // =========================================
-
     private string GetUserId()
     {
         return User.FindFirstValue("id")

@@ -1,8 +1,4 @@
-﻿// ====================================
-// FILE: KnowledgeType.cs
-// ====================================
-
-namespace MaisonBean.Domain.Enums;
+﻿namespace MaisonBean.Domain.Enums;
 
 public enum KnowledgeType
 {

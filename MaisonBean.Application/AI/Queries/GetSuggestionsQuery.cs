@@ -1,8 +1,4 @@
-﻿// ======================================
-// FILE: GetSuggestionsQuery.cs
-// ======================================
-
-using MaisonBean.Application.AI.DTOs;
+﻿using MaisonBean.Application.AI.DTOs;
 using MaisonBean.Application.AI.Interfaces;
 using MaisonBean.Application.Interfaces;
 using MediatR;

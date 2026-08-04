@@ -27,7 +27,6 @@ public class CartRepository : ICartRepository
             .FirstOrDefaultAsync(c => c.Id == id, ct);
     }
 
-    // 🔥 FIXED METHOD
     public async Task<CartItem?> FindExistingAsync(
         int userId,
         int productId,
@@ -45,9 +44,9 @@ public class CartRepository : ICartRepository
             c.IsCustomized == isCustomized &&
             c.BeanId == beanId &&
             c.MilkId == milkId &&
-            c.Strength == strength &&        // 🔥 IMPORTANT
-            c.Temp == temp &&                // 🔥 IMPORTANT
-            c.Sweetness == sweetness,        // 🔥 IMPORTANT
+            c.Strength == strength &&
+            c.Temp == temp && 
+            c.Sweetness == sweetness,
             ct);
     }
 

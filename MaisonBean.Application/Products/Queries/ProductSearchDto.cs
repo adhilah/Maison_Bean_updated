@@ -17,27 +17,11 @@ public class ProductSearchDto
 
     public int BaseCalories { get; set; }
 
-    public string? HealthBenefits
-    {
-        get;
-        set;
-    }
+    public string? HealthBenefits { get; set; }
 
-    public bool IsBlocked
-    {
-        get;
-        set;
-    }
+    public bool IsBlocked { get; set; }
 
-    public bool IsOutOfStock
-    {
-        get;
-        set;
-    }
+    public bool IsOutOfStock { get; set; }
 
-    public int StockQuantity
-    {
-        get;
-        set;
-    }
+    public int StockQuantity { get; set; }
 }

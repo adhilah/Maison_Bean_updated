@@ -23,18 +23,12 @@ public class JwtService : IJwtService
             jwtSettings.Value;
     }
 
-    // =========================================
     // GENERATE ACCESS TOKEN
-    // =========================================
-
     public string GenerateToken(
         AppUser user,
         IList<string> roles)
     {
-        // =====================================
         // CLAIMS
-        // =====================================
-
         var claims =
     new List<Claim>
     {
@@ -60,10 +54,7 @@ public class JwtService : IJwtService
         )
     };
 
-        // =====================================
         // ROLES
-        // =====================================
-
         foreach (var role in roles)
         {
             claims.Add(
@@ -74,10 +65,7 @@ public class JwtService : IJwtService
             );
         }
 
-        // =====================================
         // SECRET KEY
-        // =====================================
-
         var key =
             new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(
@@ -85,20 +73,14 @@ public class JwtService : IJwtService
                 )
             );
 
-        // =====================================
         // CREDENTIALS
-        // =====================================
-
         var credentials =
             new SigningCredentials(
                 key,
                 SecurityAlgorithms.HmacSha256
             );
 
-        // =====================================
         // TOKEN
-        // =====================================
-
         var token =
             new JwtSecurityToken(
                 issuer:
@@ -119,18 +101,12 @@ public class JwtService : IJwtService
                     credentials
             );
 
-        // =====================================
         // RETURN TOKEN
-        // =====================================
-
         return new JwtSecurityTokenHandler()
             .WriteToken(token);
     }
 
-    // =========================================
     // GENERATE REFRESH TOKEN
-    // =========================================
-
     public string GenerateRefreshToken()
     {
         var bytes =

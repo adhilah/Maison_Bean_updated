@@ -1,8 +1,4 @@
-﻿// ====================================
-// FILE: OpenAIOptions.cs
-// ====================================
-
-namespace MaisonBean.Infrastructure.AI.OpenAI;
+﻿namespace MaisonBean.Infrastructure.AI.OpenAI;
 
 public class OpenAIOptions
 {

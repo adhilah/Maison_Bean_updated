@@ -1,8 +1,4 @@
-﻿// ===============================
-// FILE: IEmbeddingService.cs
-// ===============================
-
-namespace MaisonBean.Application.AI.Interfaces;
+﻿namespace MaisonBean.Application.AI.Interfaces;
 
 public interface IEmbeddingService
 {

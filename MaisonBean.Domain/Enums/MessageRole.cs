@@ -1,8 +1,4 @@
-﻿// ====================================
-// FILE: MessageRole.cs
-// ====================================
-
-namespace MaisonBean.Domain.Enums;
+﻿namespace MaisonBean.Domain.Enums;
 
 public enum MessageRole
 {

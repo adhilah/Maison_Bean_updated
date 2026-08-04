@@ -1,8 +1,4 @@
-﻿// =============================
-// FILE: RecommendationDto.cs
-// =============================
-
-namespace MaisonBean.Application.AI.DTOs;
+﻿namespace MaisonBean.Application.AI.DTOs;
 
 public class RecommendationDto
 {

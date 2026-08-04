@@ -20,7 +20,7 @@ public class GetMilkOptionByIdQueryHandler : IRequestHandler<GetMilkOptionByIdQu
     {
         var entity = await _repo.GetByIdAsync(request.Id, ct);
 
-        if (entity == null || entity.IsBlocked) // 🔥 ADD THIS
+        if (entity == null || entity.IsBlocked)
             throw new ArgumentException("Milk option not found");
 
         return new MilkOptionDto

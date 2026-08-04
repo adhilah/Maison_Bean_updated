@@ -1,8 +1,4 @@
-﻿// ====================================
-// FILE: ChatConversation.cs
-// ====================================
-
-using MaisonBean.Domain.Common;
+﻿using MaisonBean.Domain.Common;
 
 namespace MaisonBean.Domain.Entities;
 

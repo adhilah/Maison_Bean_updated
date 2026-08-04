@@ -1,14 +1,7 @@
-﻿// ====================================
-// FILE: TokenCounter.cs
-// ====================================
-
-namespace MaisonBean.Application.AI.Helpers;
+﻿namespace MaisonBean.Application.AI.Helpers;
 
 public static class TokenCounter
 {
-    // Simple estimation:
-    // 1 token ≈ 4 characters
-
     public static int EstimateTokens(string text)
     {
         if (string.IsNullOrWhiteSpace(text))

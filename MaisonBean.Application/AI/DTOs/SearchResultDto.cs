@@ -1,8 +1,4 @@
-﻿// ============================
-// FILE: SearchResultDto.cs
-// ============================
-
-namespace MaisonBean.Application.AI.DTOs;
+﻿namespace MaisonBean.Application.AI.DTOs;
 
 public class SearchResultDto
 {

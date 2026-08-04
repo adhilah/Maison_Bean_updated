@@ -18,10 +18,7 @@ public class BeanTypesController : ControllerBase
         _mediator = mediator;
     }
 
-    // ======================================
     // GET ALL BEANS
-    // ======================================
-
     [HttpGet]
     public async Task<IActionResult> Get()
     {
@@ -32,12 +29,7 @@ public class BeanTypesController : ControllerBase
         );
     }
 
-
-    //======================================
     // GET ALL BEANS FOR ADMIN
-    //======================================
-
-
     [AdminIpWhitelist]
     [Authorize(Roles = "ADMIN")]
     [HttpGet("all/ad")]
@@ -51,11 +43,7 @@ public class BeanTypesController : ControllerBase
         return Ok(beans);
     }
 
-    // ======================================
     // CREATE BEAN
-    // ======================================
-
-
     [AdminIpWhitelist]
     [HttpPost("bean/ad")]
     [Authorize(Roles = "ADMIN")]
@@ -74,11 +62,7 @@ public class BeanTypesController : ControllerBase
         });
     }
 
-    // ======================================
     // UPDATE BEAN
-    // ======================================
-
-
     [AdminIpWhitelist]
     [HttpPut("{id}/update/ad")]
     [Authorize(Roles = "ADMIN")]
@@ -98,11 +82,7 @@ public class BeanTypesController : ControllerBase
         });
     }
 
-    // ======================================
     // BLOCK / UNBLOCK BEAN
-    // ======================================
-
-
     [AdminIpWhitelist]
     [HttpPatch("{id}/block/ad")]
     [Authorize(Roles = "ADMIN")]
@@ -122,11 +102,7 @@ public class BeanTypesController : ControllerBase
         });
     }
 
-    // ======================================
     // DELETE BEAN
-    // ======================================
-
-
     [AdminIpWhitelist]
     [HttpDelete("{id}/ad")]
     [Authorize(Roles = "ADMIN")]

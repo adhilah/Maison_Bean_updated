@@ -4,10 +4,6 @@ namespace MaisonBean.Domain.Entities;
 
 public class Product : BaseEntity
 {
-    // =========================================
-    // PROPERTIES
-    // =========================================
-
     public string Name
     {
         get;
@@ -68,17 +64,10 @@ public class Product : BaseEntity
         private set;
     }
 
-    // =========================================
-    // CONSTRUCTOR
-    // =========================================
-
     private Product()
     {
     }
 
-    // =========================================
-    // CREATE
-    // =========================================
 
     public static Product Create(
         string name,
@@ -90,10 +79,7 @@ public class Product : BaseEntity
         int baseCalories,
         string healthBenefits)
     {
-        // =========================
         // VALIDATIONS
-        // =========================
-
         if (string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException(
@@ -150,10 +136,7 @@ public class Product : BaseEntity
             );
         }
 
-        // =========================
         // CREATE PRODUCT
-        // =========================
-
         return new Product
         {
             Name = name,
@@ -169,10 +152,7 @@ public class Product : BaseEntity
         };
     }
 
-    // =========================================
     // UPDATE DETAILS
-    // =========================================
-
     public void UpdateDetails(
         string name,
         string description,
@@ -242,9 +222,7 @@ public class Product : BaseEntity
         SetUpdatedAt();
     }
 
-    // =========================================
     // BLOCK / UNBLOCK
-    // =========================================
 
     public void ToggleBlock()
     {
@@ -253,10 +231,7 @@ public class Product : BaseEntity
         SetUpdatedAt();
     }
 
-    // =========================================
     // ACTIVATE / DEACTIVATE
-    // =========================================
-
     public void Activate()
     {
         IsActive = true;
@@ -271,10 +246,8 @@ public class Product : BaseEntity
         SetUpdatedAt();
     }
 
-    // =========================================
-    // ADD STOCK
-    // =========================================
 
+    //ADD STOCK
     public void AddStock(int quantity)
     {
         if (quantity <= 0)
@@ -289,10 +262,7 @@ public class Product : BaseEntity
         SetUpdatedAt();
     }
 
-    // =========================================
     // REDUCE STOCK
-    // =========================================
-
     public void ReduceStock(int quantity)
     {
         if (quantity <= 0)

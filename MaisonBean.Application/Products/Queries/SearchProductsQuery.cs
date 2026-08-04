@@ -9,7 +9,6 @@ public record SearchProductsQuery(string Term)
 
 
 //handler
-
 public class SearchProductsQueryHandler
     : IRequestHandler<
         SearchProductsQuery,

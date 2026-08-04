@@ -1,8 +1,4 @@
-﻿// ====================================
-// FILE: ChatSanitizer.cs
-// ====================================
-
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace MaisonBean.Application.AI.Helpers;
 
